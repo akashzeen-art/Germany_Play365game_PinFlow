@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="de" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Play 365 Game</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --gold:#F5C518;--gold-light:#FFE066;--gold-dark:#C9A000;
+  --red:#DD0000;--red-light:#FF3333;
+  --font:'Poppins',-apple-system,BlinkMacSystemFont,sans-serif;
+  --glow-gold:rgba(245,197,24,0.35);--glow-red:rgba(221,0,0,0.35);
+}
+html{font-size:16px}
+body{font-family:var(--font);background:#080808;min-height:100vh;overflow-x:hidden;padding-bottom:env(safe-area-inset-bottom)}
+.phone-shell{position:relative;width:100%;max-width:390px;min-height:100vh;margin:0 auto;overflow:hidden}
+.bg-image{position:absolute;inset:0;z-index:0;background:url('BG_banner.png') center/cover no-repeat;filter:brightness(0.22) saturate(0.8)}
+.bg-grid{position:absolute;inset:0;z-index:1;pointer-events:none;background-image:radial-gradient(circle,rgba(245,197,24,0.12) 1px,transparent 1px);background-size:28px 28px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 30%,transparent 100%);-webkit-mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 30%,transparent 100%)}
+.orb{position:absolute;border-radius:50%;pointer-events:none;z-index:2;filter:blur(52px)}
+.orb-1{width:300px;height:300px;top:-80px;right:-80px;background:radial-gradient(circle,rgba(245,197,24,0.14) 0%,transparent 70%);animation:orbFloat 9s ease-in-out infinite}
+.orb-2{width:240px;height:240px;bottom:60px;left:-60px;background:radial-gradient(circle,rgba(221,0,0,0.12) 0%,transparent 70%);animation:orbFloat 12s ease-in-out infinite reverse}
+.orb-3{width:180px;height:180px;top:40%;right:-40px;background:radial-gradient(circle,rgba(245,197,24,0.08) 0%,transparent 70%);animation:orbFloat 7s ease-in-out infinite 2s}
+@keyframes orbFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-18px) scale(1.04)}}
+.phone-scroll{position:relative;z-index:3;width:100%;min-height:100vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.screen{display:flex;flex-direction:column;align-items:center;width:100%;padding:0 20px 40px;padding-top:14vh}
+.top-badge{display:flex;align-items:center;justify-content:center;margin-bottom:18px;animation:fadeUp 0.45s ease both}
+.badge-logo{height:88px;width:auto;max-width:230px;object-fit:contain;display:block;filter:drop-shadow(0 0 8px rgba(245,197,24,0.4)) brightness(1.1)}
+.card{position:relative;width:100%;background:rgba(10,8,0,0.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(245,197,24,0.2);border-radius:24px;padding:26px 22px 24px;box-shadow:0 0 0 1px rgba(245,197,24,0.06),0 8px 40px rgba(0,0,0,0.5);animation:fadeUp 0.5s 0.05s ease both}
+.corner{position:absolute;width:18px;height:18px;border-color:var(--gold);border-style:solid;opacity:0.6}
+.corner.tl{top:10px;left:10px;border-width:2px 0 0 2px;border-radius:4px 0 0 0}
+.corner.tr{top:10px;right:10px;border-width:2px 2px 0 0;border-radius:0 4px 0 0}
+.corner.bl{bottom:10px;left:10px;border-width:0 0 2px 2px;border-radius:0 0 0 4px}
+.corner.br{bottom:10px;right:10px;border-width:0 2px 2px 0;border-radius:0 0 4px 0}
+.step-indicator{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:16px}
+.step{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;background:rgba(245,197,24,0.1);border:1.5px solid rgba(245,197,24,0.3);color:rgba(255,255,255,0.4)}
+.step.active{background:linear-gradient(135deg,var(--gold-dark),var(--gold));border-color:var(--gold);color:#000;box-shadow:0 0 12px var(--glow-gold)}
+.step.done{background:rgba(245,197,24,0.15);border-color:rgba(245,197,24,0.5);color:var(--gold)}
+.step-line{flex:1;max-width:40px;height:1.5px;background:rgba(245,197,24,0.15)}
+.step-line.active-line{background:linear-gradient(90deg,rgba(245,197,24,0.5),rgba(245,197,24,0.3))}
+.main-heading{font-weight:800;font-size:26px;line-height:1.15;color:#fff;text-align:center;margin-bottom:4px;animation:fadeUp 0.45s 0.1s ease both}
+.heading-accent{display:inline-block;background:linear-gradient(90deg,var(--gold-light),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sub-heading{font-size:13px;font-weight:500;color:rgba(255,255,255,0.5);text-align:center;margin-bottom:12px;letter-spacing:0.5px;animation:fadeUp 0.45s 0.12s ease both}
+.divider{display:flex;align-items:center;gap:10px;margin:0 0 12px;animation:fadeUp 0.45s 0.15s ease both}
+.div-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(245,197,24,0.25),transparent)}
+.div-icon{font-size:8px;color:var(--gold);opacity:0.5}
+.description{font-size:12px;font-style:italic;color:rgba(255,255,255,0.55);text-align:center;line-height:1.6;margin-bottom:20px;animation:fadeUp 0.45s 0.18s ease both}
+.price-buttons{display:flex;gap:12px;margin-bottom:20px;animation:fadeUp 0.45s 0.22s ease both}
+.btn-price{flex:1;position:relative;border:1.5px solid rgba(245,197,24,0.2);border-radius:16px;padding:18px 10px 16px;cursor:pointer;outline:none;display:flex;flex-direction:column;align-items:center;gap:3px;background:rgba(255,255,255,0.04);transition:all 0.22s ease;overflow:hidden}
+.btn-price::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(245,197,24,0.08),transparent);opacity:0;transition:opacity 0.22s}
+.btn-price:hover::before,.btn-price.selected::before{opacity:1}
+.btn-price:hover{border-color:rgba(245,197,24,0.5);transform:translateY(-2px);box-shadow:0 8px 24px rgba(245,197,24,0.15)}
+.btn-price.selected{border-color:var(--gold);background:rgba(245,197,24,0.08);box-shadow:0 0 0 2px rgba(245,197,24,0.3),0 8px 28px rgba(245,197,24,0.2);transform:translateY(-2px)}
+.plan-badge{position:absolute;top:-1px;left:50%;transform:translateX(-50%);font-size:8px;font-weight:800;letter-spacing:0.8px;background:linear-gradient(90deg,var(--red),var(--red-light));color:#fff;padding:3px 8px;border-radius:0 0 8px 8px;white-space:nowrap}
+.plan-badge.best{background:linear-gradient(90deg,var(--gold-dark),var(--gold));color:#000}
+.plan-period{font-size:11px;font-weight:600;color:rgba(255,255,255,0.6);letter-spacing:0.5px;text-transform:uppercase;margin-top:10px}
+.plan-price{font-size:24px;font-weight:800;background:linear-gradient(135deg,var(--gold-light),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1}
+.btn-price.selected .plan-price{filter:drop-shadow(0 0 6px rgba(245,197,24,0.5))}
+.plan-sub{font-size:10px;font-weight:500;color:rgba(255,255,255,0.4)}
+.btn-continue{width:100%;height:52px;border:1.5px solid rgba(245,197,24,0.15);border-radius:14px;cursor:not-allowed;outline:none;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;gap:10px;background:rgba(245,197,24,0.06);margin-bottom:16px;transition:all 0.3s ease;animation:fadeUp 0.45s 0.28s ease both}
+.btn-continue.ready{background:linear-gradient(120deg,var(--gold-dark) 0%,var(--gold) 50%,var(--gold-light) 100%);background-size:200% 100%;border-color:var(--gold);cursor:pointer;box-shadow:0 6px 28px var(--glow-gold)}
+.btn-continue.ready::before{content:'';position:absolute;top:0;left:-80%;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.28),transparent);transform:skewX(-18deg);animation:shimmer 3s 0.5s ease-in-out infinite}
+.btn-continue.ready:hover{background-position:100% 0;box-shadow:0 10px 36px var(--glow-gold);transform:translateY(-2px)}
+.btn-continue.ready:active{transform:scale(0.97)}
+.btn-continue.loading{opacity:0.6;cursor:not-allowed}
+.btn-continue.loading::before{display:none}
+.btn-continue-text{font-family:var(--font);font-weight:800;font-size:16px;color:rgba(255,255,255,0.2);letter-spacing:0.5px;position:relative;z-index:1;transition:color 0.3s}
+.btn-continue.ready .btn-continue-text{color:#000}
+.btn-continue-arrow{font-size:18px;font-weight:700;color:rgba(255,255,255,0.15);position:relative;z-index:1;transition:color 0.3s,transform 0.3s}
+.btn-continue.ready .btn-continue-arrow{color:#000}
+.btn-continue.ready:hover .btn-continue-arrow{transform:translateX(4px)}
+.plan-summary{background:rgba(245,197,24,0.06);border:1px solid rgba(245,197,24,0.25);border-radius:14px;padding:16px 20px;text-align:center;margin-bottom:16px;animation:fadeUp 0.45s 0.18s ease both}
+.plan-summary-label{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:6px}
+.plan-summary-name{font-size:16px;font-weight:700;color:#fff;margin-bottom:4px}
+.plan-summary-price{font-size:22px;font-weight:800;background:linear-gradient(135deg,var(--gold-light),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.btn-confirm{width:100%;height:56px;border:none;border-radius:14px;cursor:pointer;outline:none;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;gap:10px;background:linear-gradient(120deg,var(--gold-dark) 0%,var(--gold) 50%,var(--gold-light) 100%);background-size:200% 100%;box-shadow:0 6px 28px var(--glow-gold);transition:background-position 0.4s ease,box-shadow 0.25s ease,transform 0.15s ease;margin-bottom:18px;animation:fadeUp 0.45s 0.25s ease both}
+.btn-confirm::before{content:'';position:absolute;top:0;left:-80%;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);transform:skewX(-18deg);animation:shimmer 3s 1s ease-in-out infinite}
+.btn-confirm:not(:disabled):hover{background-position:100% 0;box-shadow:0 10px 36px var(--glow-gold);transform:translateY(-2px)}
+.btn-confirm:active:not(:disabled){transform:scale(0.97)}
+.btn-confirm:disabled{opacity:0.5;cursor:not-allowed;box-shadow:none}
+.btn-confirm:disabled::before{display:none}
+.btn-text{font-family:var(--font);font-weight:800;font-size:17px;color:#000;letter-spacing:0.5px;position:relative;z-index:1}
+.btn-spinner{display:none;width:18px;height:18px;border:2.5px solid rgba(0,0,0,0.3);border-top-color:#000;border-radius:50%;animation:spin 0.75s linear infinite;flex-shrink:0;position:relative;z-index:1}
+.btn-confirm.loading .btn-spinner{display:block}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes shimmer{0%{left:-80%}55%,100%{left:160%}}
+.tnc-link{font-size:10px;color:rgba(255,255,255,0.35);text-decoration:underline;text-align:center;display:block;transition:color 0.2s;animation:fadeUp 0.45s 0.35s ease both;cursor:pointer}
+.tnc-link:hover{color:var(--gold-light)}
+.tnc-section{position:relative;z-index:3;width:100%;padding:24px 20px calc(28px + env(safe-area-inset-bottom));background:rgba(0,0,0,0.6);border-top:1px solid rgba(245,197,24,0.15)}
+.tnc-title{font-size:12px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px}
+.tnc-list{list-style:none;display:flex;flex-direction:column;gap:10px}
+.tnc-list li{font-size:11px;line-height:1.65;color:rgba(255,255,255,0.6);padding-left:14px;position:relative}
+.tnc-list li::before{content:'\25B8';position:absolute;left:0;color:var(--gold);font-size:9px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideOut{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(-40px)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
+@media(max-width:360px){.screen{padding-left:14px;padding-right:14px}.card{padding:22px 14px 20px}.plan-price{font-size:20px}}
+@media(max-height:680px){.screen{padding-top:9vh}}
+</style>
+</head>
+<body>
+<div class="phone-shell">
+  <div class="bg-image" aria-hidden="true"></div>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="orb orb-1" aria-hidden="true"></div>
+  <div class="orb orb-2" aria-hidden="true"></div>
+  <div class="orb orb-3" aria-hidden="true"></div>
+
+  <div class="phone-scroll" id="phoneScroll">
+
+    <!-- STEP 1 -->
+    <div id="page1">
+      <main class="screen">
+        <div class="top-badge">
+          <img src="logo.png" alt="Play 365 Game" class="badge-logo"/>
+        </div>
+        <div class="card">
+          <span class="corner tl"></span><span class="corner tr"></span>
+          <span class="corner bl"></span><span class="corner br"></span>
+          <div class="step-indicator">
+            <span class="step active">1</span>
+            <span class="step-line"></span>
+            <span class="step">2</span>
+          </div>
+          <h1 class="main-heading">Jetzt <span class="heading-accent">spielen!</span></h1>
+          <p class="sub-heading">W&auml;hle deinen Tarif</p>
+          <div class="divider"><span class="div-line"></span><span class="div-icon">&#9670;</span><span class="div-line"></span></div>
+          <p class="description">Unbegrenzter Zugang zu hunderten von Spielen.<br>Kein Vertrag &ndash; jederzeit k&uuml;ndbar.</p>
+          <div class="price-buttons">
+            <button type="button" class="btn-price" id="btn-weekly" data-plan="weekly" data-label="W&ouml;chentlich" data-price="4,99 &euro;/Woche">
+              <span class="plan-badge">BELIEBT</span>
+              <span class="plan-period">W&ouml;chentlich</span>
+              <span class="plan-price">4,99 &euro;</span>
+              <span class="plan-sub">pro Woche</span>
+            </button>
+            <button type="button" class="btn-price" id="btn-monthly" data-plan="monthly" data-label="Monatlich" data-price="19,99 &euro;/Monat">
+              <span class="plan-badge best">BESTES ANGEBOT</span>
+              <span class="plan-period">Monatlich</span>
+              <span class="plan-price">19,99 &euro;</span>
+              <span class="plan-sub">pro Monat</span>
+            </button>
+          </div>
+          <button type="button" class="btn-continue" id="btn-continue" disabled>
+            <span class="btn-continue-text">Weiter</span>
+            <span class="btn-continue-arrow">&#8594;</span>
+          </button>
+          <a class="tnc-link" onclick="document.getElementById('tnc1').scrollIntoView({behavior:'smooth'})">Allgemeine Gesch&auml;ftsbedingungen</a>
+        </div>
+      </main>
+      <section class="tnc-section" id="tnc1">
+        <h3 class="tnc-title">Allgemeine Gesch&auml;ftsbedingungen</h3>
+        <ul class="tnc-list">
+          <li>Play365Game ist ein HTML5-Spieleportal mit einer gro&szlig;en Auswahl an unterhaltsamen Spielen, sofort auf jedem Ger&auml;t zug&auml;nglich.</li>
+          <li>W&ouml;chentliches Abonnement: 4,99 &euro; pro Woche. Monatliches Abonnement: 19,99 &euro; pro Monat. Das Abonnement verl&auml;ngert sich automatisch, bis es gek&uuml;ndigt wird.</li>
+          <li>Zur K&uuml;ndigung kontaktiere unseren Kundendienst oder sende STOP an die Servicenummer.</li>
+          <li>Zur Nutzung dieses Dienstes musst du mindestens 18 Jahre alt sein oder die Erlaubnis deiner Eltern haben.</li>
+        </ul>
+      </section>
+    </div>
+
+    <!-- STEP 2 -->
+    <div id="page2" style="display:none">
+      <main class="screen">
+        <div class="top-badge">
+          <img src="logo.png" alt="Play 365 Game" class="badge-logo"/>
+        </div>
+        <div class="card">
+          <span class="corner tl"></span><span class="corner tr"></span>
+          <span class="corner bl"></span><span class="corner br"></span>
+          <div class="step-indicator">
+            <span class="step done">&#10003;</span>
+            <span class="step-line active-line"></span>
+            <span class="step active">2</span>
+          </div>
+          <h1 class="main-heading">Fast <span class="heading-accent">geschafft!</span></h1>
+          <div class="divider"><span class="div-line"></span><span class="div-icon">&#9670;</span><span class="div-line"></span></div>
+          <div class="plan-summary">
+            <div class="plan-summary-label">Dein gew&auml;hlter Tarif</div>
+            <div class="plan-summary-name" id="summaryName">W&ouml;chentlich</div>
+            <div class="plan-summary-price" id="summaryPrice">4,99 &euro;/Woche</div>
+          </div>
+          <p class="description">Klicke auf &bdquo;Best&auml;tigen&ldquo;, um dein Abonnement zu aktivieren.<br>Kein Vertrag &ndash; jederzeit k&uuml;ndbar.</p>
+          <button type="button" class="btn-confirm" id="btn-confirm">
+            <span class="btn-text">Best&auml;tigen</span>
+            <span class="btn-spinner" aria-hidden="true"></span>
+          </button>
+          <a class="tnc-link" onclick="document.getElementById('tnc2').scrollIntoView({behavior:'smooth'})">Allgemeine Gesch&auml;ftsbedingungen</a>
+        </div>
+      </main>
+      <section class="tnc-section" id="tnc2">
+        <h3 class="tnc-title">Allgemeine Gesch&auml;ftsbedingungen</h3>
+        <ul class="tnc-list">
+          <li>Play365Game ist ein HTML5-Spieleportal mit einer gro&szlig;en Auswahl an unterhaltsamen Spielen, sofort auf jedem Ger&auml;t zug&auml;nglich.</li>
+          <li>W&ouml;chentliches Abonnement: 4,99 &euro; pro Woche. Monatliches Abonnement: 19,99 &euro; pro Monat. Das Abonnement verl&auml;ngert sich automatisch, bis es gek&uuml;ndigt wird.</li>
+          <li>Zur K&uuml;ndigung kontaktiere unseren Kundendienst oder sende STOP an die Servicenummer.</li>
+          <li>Zur Nutzung dieses Dienstes musst du mindestens 18 Jahre alt sein oder die Erlaubnis deiner Eltern haben.</li>
+        </ul>
+      </section>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function(){
+  var PORTAL = 'http://ge.play365game.com/';
+  var selected = null;
+  var continueBtn = document.getElementById('btn-continue');
+
+  document.querySelectorAll('.btn-price').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.btn-price').forEach(function(b){ b.classList.remove('selected'); });
+      btn.classList.add('selected');
+      selected = {
+        plan:  btn.getAttribute('data-plan'),
+        label: btn.getAttribute('data-label'),
+        price: btn.getAttribute('data-price')
+      };
+      continueBtn.disabled = false;
+      continueBtn.classList.add('ready');
+    });
+  });
+
+  continueBtn.addEventListener('click', function(){
+    if (!selected) return;
+    continueBtn.classList.add('loading');
+    continueBtn.disabled = true;
+    document.getElementById('summaryName').innerHTML  = selected.label;
+    document.getElementById('summaryPrice').innerHTML = selected.price;
+    var page1 = document.getElementById('page1');
+    var page2 = document.getElementById('page2');
+    page1.style.animation = 'slideOut 0.28s ease forwards';
+    setTimeout(function(){
+      page1.style.display = 'none';
+      page2.style.display = 'block';
+      page2.style.animation = 'slideIn 0.28s ease forwards';
+      document.getElementById('phoneScroll').scrollTop = 0;
+    }, 260);
+  });
+
+  document.getElementById('btn-confirm').addEventListener('click', function(){
+    var btn = this;
+    btn.classList.add('loading');
+    btn.disabled = true;
+    var plan = selected ? selected.plan : 'weekly';
+    setTimeout(function(){
+      window.location.href = PORTAL + '?plan=' + encodeURIComponent(plan);
+    }, 400);
+  });
+})();
+</script>
+</body>
+</html>
